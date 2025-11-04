@@ -1,0 +1,22 @@
+const fs = require('fs');
+
+const products = [
+  { id: 1, name: "Laptop", price: 60000 },
+  { id: 2, name: "Mouse", price: 800 },
+];
+
+
+fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
+console.log('✅ products.json created');
+
+
+const newProducts = [
+  { id: 3, name: "Keyboard", price: 1500 },
+  { id: 4, name: "Monitor", price: 12000 },
+];
+
+const data = JSON.parse(fs.readFileSync('products.json'));
+data.push(...newProducts);
+
+fs.writeFileSync('products.json', JSON.stringify(data, null, 2));
+console.log('New products added');

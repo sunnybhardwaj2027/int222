@@ -1,0 +1,12 @@
+const fs = require('fs');
+
+const data1 = JSON.parse(fs.readFileSync('products.json'));
+const data2 = JSON.parse(fs.readFileSync('students.json'));
+
+const merged = {
+  products: data1,
+  students: data2
+};
+
+fs.writeFileSync('merged.json', JSON.stringify(merged, null, 2));
+console.log('Data merged into merged.json');

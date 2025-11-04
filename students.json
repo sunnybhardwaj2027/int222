@@ -1,0 +1,20 @@
+const fs = require('fs');
+
+const students = [
+  { name: "Amit", marks: 80 },
+  { name: "Priya", marks: 75 },
+  { name: "Ravi", marks: 90 },
+];
+
+if (!fs.existsSync('students.json')) {
+  fs.writeFileSync('students.json', JSON.stringify(students, null, 2));
+}
+
+let data = JSON.parse(fs.readFileSync('students.json'));
+data = data.map(student => ({
+  ...student,
+  marks: student.marks + 5
+}));
+
+fs.writeFileSync('students.json', JSON.stringify(data, null, 2));
+console.log('Students marks increased by 5');
