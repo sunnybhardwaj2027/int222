@@ -1,0 +1,12 @@
+{
+  "name": "2workingwithjson",
+  "version": "1.0.0",
+  "description": "\"here i will learn working with json\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
