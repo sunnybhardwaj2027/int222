@@ -1,0 +1,14 @@
+1. create to handle multiple routes like about, contact page, address
+2. program to read data from a text file and that send data to http
+3. program to dent json data like product detail
+4. creae a server on custom port 
+5. write a display code (200, 404, 500) based on the route access
+6. create a server that uses the get method and display welcome message
+7. show the user information by using get method(name, age)
+8. create html form with input by using post method
+9. add two numbers use the post method
+10. create a page by using get and post method
+11. create an express app that take username and age
+12. create and express app that accepts a post request
+13. create a get route/product that accepts a post request
+14. query parameters

@@ -1,0 +1,12 @@
+{
+  "name": "4zlib",
+  "version": "1.0.0",
+  "description": "\"compressing and decompressing data with zlib\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

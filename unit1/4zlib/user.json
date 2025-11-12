@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "username": "sunny",
+  "course": "backend",
+  "topic": [
+    "Node.js",
+    "JSON",
+    "fs"
+  ]
+}
