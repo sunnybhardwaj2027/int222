@@ -1,0 +1,12 @@
+{
+  "name": "5promisesasyncawait",
+  "version": "1.0.0",
+  "description": "\"here we will learn about promises and async/await\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

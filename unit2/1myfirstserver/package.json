@@ -1,0 +1,12 @@
+{
+  "name": "1myfirstserver",
+  "version": "1.0.0",
+  "description": "\"here we learn into of http module and setting up basic server\"",
+  "license": "ISC",
+  "author": "sunny kumr",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
