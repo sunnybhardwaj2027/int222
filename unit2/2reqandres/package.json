@@ -1,0 +1,12 @@
+{
+  "name": "2reqandres",
+  "version": "1.0.0",
+  "description": "\"here we will learn about request and response method\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
