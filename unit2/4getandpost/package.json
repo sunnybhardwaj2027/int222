@@ -1,0 +1,15 @@
+{
+  "name": "4getandpost",
+  "version": "1.0.0",
+  "description": "\"here we understand about get and post request\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
