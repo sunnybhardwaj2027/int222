@@ -115,6 +115,3 @@ Login data received:
 { username: 'ashut', password: '123' }
 
 */
-
-// Our index.js file is starting to get crowded with routes. The next topic, express.Router, is the solution for organizing them.
-
