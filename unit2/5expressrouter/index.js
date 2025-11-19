@@ -48,7 +48,7 @@ app.use(mainRoutes);
 
 // --- 404 handler(must be at the end) ---
 app.use((req, res) => {
-    req.status(404).send('<h1>404 not found</h1>');
+    res.status(404).send('<h1>404 not found</h1>');
 });
 
 // 3. start the server 
