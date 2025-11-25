@@ -1,0 +1,15 @@
+{
+  "name": "2creatingserver",
+  "version": "1.0.0",
+  "description": "\"here we create basic websocket server\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

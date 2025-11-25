@@ -1,0 +1,50 @@
+Socket services in Node.js
+
+* understanding network sockets * 
+
+1. the problem in with unit2(HTTP) => in unit2, we used HTTP(app.get, app.post). HTTP is designed to be stateless and unidirectional(one-way)
+
+the 'request-response' cycle
+1. client => 'hey, sever give me the login.'(request)
+2. server => 'here is the login page' (response)
+3. connection => cut
+
+the server 'forgets' who the client is immediately after sending the response if the server suddenly gets the new data(like a breaking news alert or a chat message), it cannot call the client to tell them. it has to wait for the client to visit the site again.
+
+The "Polling" Workaround (The Old Way): Before sockets, if you wanted a chat app, the browser had to ask the server every 1 second:
+
+'any new message' -> 'no'
+'any new message' -> 'no'
+'any new message' -> 'yes one'
+
+this is called polling. it wastes huge amount of data and server power
+
+2. the solution : network sockets
+a network socket (specifically a websocket) solves this by keeping the door open
+=> it creates a persistant, bi-directional(full duplex) connection
+Persistent: The connection stays open for as long as the user is on the website. It doesn't close after one request.
+Bi-directional: The Client can talk to the Server, AND the Server can talk to the Client at any time, without being asked first.
+
+The "Phone Call" Analogy:
+
+HTTP (Unit II): Is like a Walkie-Talkie. You press the button, say your piece, and release. You can't hear the other person while you are talking.
+
+Sockets (Unit III): Is like a Phone Call. Once you pick up the phone (connect), the line is open. You can both talk at the same time. You can sit in silence, and the line stays open. If the other person has news, they just say it—you hear it instantly.
+
+3. How a Socket Connection Starts (The Handshake)
+This is the technical part that connects Unit II to Unit III. A WebSocket connection actually starts as a normal HTTP request!
+
+The Request: The browser sends a standard HTTP GET request to the server, but it includes a special "Header" (remember headers from Unit II?): Connection: Upgrade Upgrade: websocket
+
+Translation: "Hello Server, I am speaking HTTP, but I would like to upgrade this connection to a WebSocket."
+
+The Response: If the server knows how to handle sockets, it replies with status code 101 Switching Protocols.
+
+The Upgrade: The HTTP rules vanish. The connection becomes a raw data pipe (a TCP socket). Now, data can flow instantly in both directions.
+
+feature => HTTP(unit2)  => websocket(unit3)
+connection => opens, transfers data, then closes immediately => stays open(persistant)
+initiator => only the client can start the converstion => client or server can send the data anytime.
+speed => high overhead(headers sent everytime). => extremely fast 
+use case => loading web pages, submitting forms => chat apps, multiplayer games, stock tickers
+

@@ -1,3 +1,9 @@
+// 1. installing express-validator => it's third party package so we need to install it => npm install express-validator
+
+// 2. how to use it => you use express-validator in two steps inside your route
+// 1. the rules => you define a list of rules(eg- body('email').isEmail());
+// 2. the check => you check if any of those rules were broken using validationResult.
+
 const express = require('express');
 const router = express.Router();
 
