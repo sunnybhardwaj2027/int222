@@ -1,0 +1,66 @@
+5. express-sessions
+
+Cookies are great, but they have a problem: 'Security'. if you store role : admin directly in a cookie, a smart user can edit that file on their computer, change it to role: super-admin, and hack your site.
+
+The Solutions: 'Sessions' instead of giving the user the actual data(the keys to the bank), you keep the data safe on the server and just give the user a random Session ID (a ticket number).
+
+. Cookie: contains data like {"role": "admit"} (insecure for sensitive data).
+. Session:
+    . Browser has: A cookie with ID => 123xyz
+    . Server has: A database entery: ID 123xyz = { role: 'admin', balance: $1000 }.
+
+express-session handles this logic for you.
+
+step1: install it => npm install express-session
+step2: using sessions => create a file named => sessions.js
+
+const express = require('express');
+const session = require('express-session'); // 1. Import
+
+const app = express();
+
+// 2. Configure Session Middleware
+app.use(session({
+    secret: 'my-secret-key', // Used to sign the session ID cookie (make it un-fakeable)
+    resave: false,
+    saveUninitialized: true
+}));
+
+app.get('/count', (req, res) => {
+    // 3. Use req.session to store ANY data
+    // This data lives on the SERVER memory, not the browser
+    
+    if (req.session.views) {
+        req.session.views++;
+        res.send(`You have visited this page ${req.session.views} times.`);
+    } else {
+        req.session.views = 1;
+        res.send('Welcome! This is your first visit.');
+    }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+
+
+Test this:
+
+Open the page /count. It says "First visit".
+
+Refresh the page 5 times. It will count up: "Visited 2 times", "Visited 3 times"...
+
+Open the page in a different browser (or Incognito mode). It will start back at 1.
+
+The server is tracking two different people separately using sessions!
+
+
+6. cookie session vs express session
+
+1. express-session(what we just used) => stores the data on the server. the client only gets an ID
+pros => more secure, can store huge amounts of data
+cons => uses server memory
+
+2. cookie-session => stores the data in cookie itself(encrypted)
+pros => saves server memory (stateless)
+cons => you can only store small amounts of data (cookies are small)
+
+For 99% of beginner projects, express-session is the standard choice.

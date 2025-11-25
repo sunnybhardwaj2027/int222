@@ -1,0 +1,107 @@
+creating middleware
+
+we have actually been using middleware this entire time(express.json(), express.urlencoded(), express-validator). now, we will learn what actually they are. and how to write your own.
+
+1. introduction to middleware
+
+middleware is a function that sits in the middle of the request-response cycle. it has access to the request object(req), the response object(res), and a special function usually called next.
+
+The analogy: The Factory Assembly Line imaging your web server is a factory making a product.
+1. Raw Material(Request): the request comes in at the start of the line.
+2. The stations(middleware): the raw Material passes through serveral stations.
+. station A(Logger): "I will write down the time this material arrived." --> passes it on.
+. Station B(Auth): "I will check if this material has a valid ID tag." --> passes it on.
+. Station C(Parser): "I will open the box and unpack the contents." --> passes it on
+3. The Finished product (Route Handler): Finally, it reaches your app.get('/login') Handler, which sends the response
+
+if any station(middleware) spots a problem(like a missing ID tag), it can stop the line and send a response immediately, never letting the request reach the end.
+
+2. implementing basic middleware
+=> a middleware looks exactly like a route handler, but with three arguments:
+
+function myMiddleware(req, res, next){
+    // 1. Do something with the request
+    console.log('middleware is running!');
+
+    // 2. pass CONTROL to the next middleware
+    // if you forget this, your website will hang forever!
+    next();
+}
+
+code example: A "Logging" middleware
+let's create a custom middleware that prints the URL of every single request that hits our server.
+
+new file -> middleware-test.js
+
+
+const express = require('express');
+const app = express();
+
+// --- 1. Define the Middleware ---
+const loggerMiddleware = (req, res, next) => {
+    // log the current time and the URL requested
+    const time = new Date().toISOString();
+    console.log(`[${time}] Request received for: ${req.url}`);
+
+    // CRITICAL: Call next () to pass the baton to the next runner
+    next();
+};
+
+
+// --- 2. Use the Middleware globally ---
+// app.use() means "Run this on EVERY request"
+app.use(loggerMiddleware);
+
+// --- 3. Define Routes ---
+app.get('/', (req, res) => {
+    console.log('Inside Homepage Handler');
+    res.send('Home Page');
+});
+
+app.get('/about', (req, res) => {
+    console.log('Inside About Handler');
+    res.send('About Page');
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});
+
+
+Run this code:
+
+Visit http://localhost:3000/.
+
+Look at your terminal. You will see:
+
+[2023-11-25T12:00:00.000Z] Request received for: /
+Inside Homepage Handler
+See the order? The middleware ran first, then handed control to the route handler.
+
+3. app.use() vs app.all()
+=> they controls when middleware runs
+
+app.use()
+
+. what it does => applies middleware to all request(GET, POST, PUT, DELETE) that starts with a particular path.
+. common use => global setting like parsers or loggers
+.example
+// Runs on /, /about, /users/profile... everything.
+app.use(loggerMiddleware); 
+
+// Runs on /admin AND /admin/dashboard AND /admin/users
+app.use('/admin', adminAuthMiddleware);
+
+app.all()
+
+what it does => Matches a specific route exactly, but for all HTTP methods (GET, POST, etc.).
+
+Common Use: Handling a specific page regardless of how the user accesses it (e.g., a "maintenance mode" for a specific endpoint).
+
+example.
+// Handles GET /secret, POST /secret, DELETE /secret
+app.all('/secret', (req, res, next) => {
+    console.log('Someone is touching the secret route!');
+    next();
+});
+

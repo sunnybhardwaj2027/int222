@@ -1,0 +1,16 @@
+{
+  "name": "3express-session",
+  "version": "1.0.0",
+  "description": "\"here we will learn about session\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-session": "^1.18.2"
+  }
+}

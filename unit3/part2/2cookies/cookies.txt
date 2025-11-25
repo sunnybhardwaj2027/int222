@@ -1,0 +1,67 @@
+cookies and sessions
+
+This is one of the most important concepts in backend development because HTTP is stateless.
+
+stateless => the The server has amnesia. If you log in on Page 1, and then click a link to Page 2, the server forgets who you are. It treats Page 2 as a request from a complete stranger.
+
+The Solution => We need to give the user an "ID Badge" that they show with every request. This ID Badge is a Cookie.
+
+4. cookie-parser 
+A 'Cookie' is a tiny string of data that the server sends to the browser. the browser saves it and automatically sends it back to the server with every single request after that
+
+'cookie-parser' is the middleware that lets your Node.js server read these cookies.
+
+Step1 => install it => npm install cookie-parser
+setp2 => using it to set and read cookies
+
+create a file name cookies.js
+
+const express = require('express');
+const cookieParser = require('cookie-parser'); // 1. Import it
+
+const app = express();
+
+// 2. Use the middleware
+app.use(cookieParser());
+
+// Route to SET a cookie
+app.get('/login', (req, res) => {
+    // res.cookie(name, value)
+    // This sends a header telling the browser to save this data
+    res.cookie('username', 'Ashutosh'); 
+    res.cookie('role', 'admin');
+    res.send('Cookie has been set! Check your browser storage.');
+});
+
+// Route to READ cookies
+app.get('/profile', (req, res) => {
+    // 3. Access cookies using req.cookies
+    console.log(req.cookies); 
+    
+    const { username, role } = req.cookies;
+
+    if (username) {
+        res.send(`Welcome back, ${username}! You are an ${role}.`);
+    } else {
+        res.send('I do not know you. Please go to /login first.');
+    }
+});
+
+// Route to DELETE a cookie
+app.get('/logout', (req, res) => {
+    res.clearCookie('username');
+    res.clearCookie('role');
+    res.send('Cookies cleared. You are logged out.');
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+
+
+Test this:
+
+Go to /profile. It says "I do not know you."
+
+Go to /login. It sets the cookie.
+
+Go back to /profile. It now says "Welcome back, Ashutosh!" The server remembered you!
+
