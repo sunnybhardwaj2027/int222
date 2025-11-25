@@ -1,0 +1,138 @@
+Building a real chat app
+
+we will upgrade from raw 'ws' library to the industry-standard Socket.IO, which makes Building Chat Apps much easier
+
+A Socket.IO chat server
+
+why Socket.IO ? while 'ws' is great for simple connection, Socket.IO is the industry standard for Building apps like Whatsapp, Slack or multiplayer game
+
+. reliability => if the user's WI-FI flickers, ws disconnects immediately. Socket.IO keeps trying to reconnect automatically
+. Broadcasting => it makes it incredibly easy to send a message to everyone connected at once (which is exactly what a group chat needs.)
+
+step1 => install dependencies => we need two packages: express(for the website) and socket.io(for the chat) => npm install express socket.io
+
+step2 : the backend code(chat-server.js)
+
+Connecting Socket.IO to Express is a little unique. Socket.IO needs to "attach" itself to the raw HTTP server so it can intercept the "Upgrade" requests we talked about earlier.
+
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+// 1. create a raw HTTP server passing our Express 'app' to it
+const server = http.createServer(app);
+// 2. create the Socket.IO server attached to that HTTP server
+const io = new Server(server);
+
+// server the html file (we will create this next)
+app.get('/', (req, res) => {
+    res.sendFile((__dirname + '/index.html'));
+});
+
+// --- SOCKET.IO LOGIC ---
+io.on('connection', (socket) => {
+    console.log('A user Connected: ', socket.id);
+
+    // listen for chat messages from THIS client
+    socket.on('chat message', (msg) => {
+        console.log('Message received: ' + msg);
+
+        // Broadcast message to everyone connected (including the sender)
+        io.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+
+// IMPORTANT: Listen on 'server', not 'app'
+server.listen(3000, () => {
+    console.log('chat server running on http://localhost:3000');
+});
+
+// keyconcept: io.emit vs socket.send
+// socket.send(used in ws) sends a message to specific person.
+// io.emit (used here ) sends a message to everyone connected. this is how user A's message shows up on user B's screen
+
+// step 3 => The Frontend code(index.html) => we need a user Interface
+
+index.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Chat App</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding-bottom: 50px;
+            background-color: grey;
+        }
+        #form {
+            background-color: #333;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #input {
+            border: 0;
+            padding: 10px;
+            width: 85%;
+            margin-right: 0.5%;
+        }
+        #btn {
+            width: 11%;
+            background-color: #00C851;
+            border: none;
+            padding: 10px;
+            color: white;
+            cursor: pointer;
+        }
+        #messages { list-style-type: none; margin: 0; padding: 0;} 
+        #messages li { padding: 8px 10px; margin-bottom: 5px; background: #bda7a7; border-radius: 10px; margin-left: 20px; margin-right: 20px;}
+    </style>
+</head>
+<body>
+    <ul id="messages"></ul>
+
+    <form id="form" action="">
+        <input type="text" id="input" autocomplete="off" placeholder="Type a Message...">
+        <button id="btn">send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // 2. connect to server
+        const socket = io();
+
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        // 3. sending a message
+        form.addEventListener('submit', function(e){
+            e.preventDefault(); // stop page from refreshing
+            if(input.value){
+                // emit the event 'chat message' to the server
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
+
+        // 4. receiving a message
+        socket.on('chat message', function(msg){
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+</body>
+</html>
+
