@@ -1,0 +1,17 @@
+Topic 1: introduction to MongoDB
+To understand MongoDB, we first need to understand the problem it solves.
+
+1. SQL(The old way) => for decades, databases were like excel spreadsheets. you had Tables(like "students"), Columns(Name, Age, Marks), and Rows (The actual data).
+
+. The problem => it is rigid. if you define a table with 3 Columns, you cannot suddenly add a 4th Column for just one student. you have to change the entire table structure.
+
+2. MongoDB(The NoSQL way) => MongoDB is a NoSQL(Not only SQL) database. instead of Tables, it uses Documents.
+
+. The Solution => it is flexible. A Document is just a JSON object. one student can have 3 fields(name, age, marks) and the next student can have 5 fields (name, age , hobbies, address, phone). MongoDB doesn't care.
+
+Why is it perfect for Node.js?
+=> Node.js code uses JSON Objects.
+=> MongoDB stores JSON-like Documents(technically BSON).
+=> this means you don't have to convert data. you just save you javaScript directly into the database
+
+Topic 2: MongoDB database and shell installation 
