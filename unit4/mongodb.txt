@@ -14,4 +14,102 @@ Why is it perfect for Node.js?
 => MongoDB stores JSON-like Documents(technically BSON).
 => this means you don't have to convert data. you just save you javaScript directly into the database
 
-Topic 2: MongoDB database and shell installation 
+Topic 2: MongoDB database and shell installation => this is the practical part. you can't write code until the database engine is running on your laptop.
+
+Note: MongoDB has split its tools into three parts. you need to install them in this order.
+
+Part A: Install the Server (The engine)
+This is the actual database that runs in background.
+
+1. got to https://www.mongodb.com/try/download/community
+2. select
+    . Version: Latest (e.g., 7.x or 8.x)
+    . Platform: Windows x64 (MSI)
+
+3. click download and run the installer
+
+4. CRITICAL STEP  during installation
+    . select "complete" setup.
+    . You will see a screen "Service Configuration". Ensure "Install MongoDB as a Service" is CHECKED. (This ensures it runs automatically).
+    . You will see a checkbox for "Install MongoDB Compass". CHECK this. (Compass is a GUI tool, like a file explorer for your data).
+
+part B: install the shell (mongosh)
+The "Shell" is the command-line tool you use to type commands like db.users.find(). It is now a separate download.
+
+    1. Go to the https://www.mongodb.com/try/download/shell
+    2. Download the ZIP package for Windows.
+    3. Extract the ZIP. You will find a file named mongosh.exe inside the bin folder.
+    4. setup.
+        . Copy mongosh.exe
+        . Paste it into your MongoDB Server folder (usually C:\Program Files\MongoDB\Server\7.0\bin). This keeps everything in one place.
+    5. Add to path(optional but recommended)
+        . Copy the path to that bin folder.
+        . Search Windows for "Edit the system environment variables" -> Environment Variables.
+        . Select Path -> Edit -> New -> Paste the path.
+        . This lets you type mongosh in any terminal window.
+
+part C: Verify installation => lets make sure it's works before moving to the next Topic
+1. Open your Command Prompt (cmd) or VS Code terminal.
+2. Type: mongosh and press Enter.
+3. Success: You should see a prompt that looks like test>. This means you are connected to your local database!
+4. Type exit to quit.
+
+Topic 3: MongoDB Terminalogy => database, collection, Document and field
+
+To understand these, it helps to compare them to a traditional SQL database (like MySQL or tables in Excel), which you might have seen before.
+
+1. database
+
+. Definition => The top-level container. it holds all your data for a specific application.
+. Analogy: This is like the Workbook file in Excel (e.g., CollegeData.xlsx).
+. In MongoDB: You can have multiple databases on one server (e.g., one for your "Chat App" and another for your "School Project").
+
+2. collection
+
+. Definition: A group of similar records.
+. Analogy: This is like a single Sheet or Tab inside your Excel workbook (e.g., a "Students" tab).
+. In MongoDB: A database contains collections. For example, your CollegeData database might have a students collection and a teachers collection.
+. Key Difference: In SQL, this is called a Table.
+
+3. Document
+
+. Definition: A single record of data.
+. Analogy: This is like a single Row in your Excel sheet (e.g., Row 2, which contains all of "Ashutosh's" data).
+. In MongoDB: A collection contains documents.
+. Key Difference: In SQL, this is called a Row. In MongoDB, it is a JSON object.
+
+4. field
+
+. Definition: A specific piece of data inside a document.
+. Analogy: This is like a Column Header or a specific Cell (e.g., "Name", "Age", "Email").
+. In MongoDB: A document contains fields.
+. Key Difference: In SQL, this is called a Column.
+
+Visualizing the Hierarchy
+
+// 1. DATABASE: "CollegeDB"
+//    |
+//    +-- 2. COLLECTION: "students"
+//        |
+//        +-- 3. DOCUMENT (Student 1)
+//        |   {
+//        |      "name": "Sunny",      <-- 4. FIELD: "name"
+//        |      "age": 21,               <-- 4. FIELD: "age"
+//        |      "course": "CSE"          <-- 4. FIELD: "course"
+//        |   },
+//        |
+//        +-- 3. DOCUMENT (Student 2)
+//            {
+//               "name": "Rahul",
+//               "age": 22
+//            }
+
+Comparision Table
+
+SQL(traditional)  MongoDB(NoSQL)
+database          database
+Table             collection
+Row               Document
+Column            field
+
+
