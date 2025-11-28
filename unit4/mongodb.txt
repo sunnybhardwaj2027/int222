@@ -87,22 +87,22 @@ To understand these, it helps to compare them to a traditional SQL database (lik
 
 Visualizing the Hierarchy
 
-// 1. DATABASE: "CollegeDB"
-//    |
-//    +-- 2. COLLECTION: "students"
-//        |
-//        +-- 3. DOCUMENT (Student 1)
-//        |   {
-//        |      "name": "Sunny",      <-- 4. FIELD: "name"
-//        |      "age": 21,               <-- 4. FIELD: "age"
-//        |      "course": "CSE"          <-- 4. FIELD: "course"
-//        |   },
-//        |
-//        +-- 3. DOCUMENT (Student 2)
-//            {
-//               "name": "Rahul",
-//               "age": 22
-//            }
+ 1. DATABASE: "CollegeDB"
+    |
+    +-- 2. COLLECTION: "students"
+        |
+        +-- 3. DOCUMENT (Student 1)
+        |   {
+        |      "name": "Sunny",      <-- 4. FIELD: "name"
+        |      "age": 21,               <-- 4. FIELD: "age"
+        |      "course": "CSE"          <-- 4. FIELD: "course"
+        |   },
+        |
+        +-- 3. DOCUMENT (Student 2)
+            {
+               "name": "Rahul",
+               "age": 22
+            }
 
 Comparision Table
 
@@ -111,5 +111,287 @@ database          database
 Table             collection
 Row               Document
 Column            field
+
+Topic 4: MongoDB Shell commands
+=> in MongoDB, you don't need to "officially" create things before you use them. they are created automatically when you first save data.
+
+1. create(switch) database 
+Command: use <database_name>
+=> in SQL, you must run CREATE DATABASE. in MongoDB, you just tell the cell "i want to use the "college" database". if it doesn't exist, MongoDB waits until you save data to actually create it.
+
+Type this => use college
+output => switched to db college
+your propmt should now change to college>
+
+2. create collection and create documents(insert)
+Command: db.<collection_name>.insertOne(<document>)
+=> We will create a collection named students and add your first document to it.
+
+db.students.insertOne({ name: "Sunny", age: 21, course: "CSE" })
+
+=> you will see a JSON object like :
+{
+  "acknowledged": true,
+  "insertedId": ObjectId("656...")
+}
+
+=> acknowledged : true means it worked
+=> insertedId : this is the unique '_id' MongoDB automatically generates for you 
+
+
+3. Read Data (find)
+
+Command: db.<collection_name>.find()
+now let's see what is inside our collection
+
+type this : db.students.find()
+
+output 
+[
+  {
+    "_id": ObjectId("..."),
+    "name": "Ashutosh",
+    "age": 21,
+    "course": "CSE"
+  }
+]
+
+This lists all Documents in collection
+
+4. data manipulation - update
+
+Command: db.<collection_name>.updateOne(<filter>, <update_action>)
+
+=> we need to update the document where 'name' is 'Sunny'. we use '$set' operator to tell MongoDB exactly which field to change.
+
+db.students.updateOne(
+  { name: "Sunny" },
+  { $set: { age: 22 } }
+)
+
+output:
+
+{
+  "acknowledged": true,
+  "insertedId": null,
+  "matchedCount": 1,
+  "modifiedCount": 1,
+  "upsertedCount": 0
+}
+
+matchedCount: 1: It found 1 student named Sunny.
+modifiedCount: 1: It successfully updated 1 document.
+
+Perfect. You are currently at the test> prompt in your terminal. We are going to execute the commands listed in your syllabus one by one.
+
+Topic 4: MongoDB Shell Commands
+
+In MongoDB, you don't need to "officially" create things before you use them. They are created automatically when you first save data.
+
+Type these commands into your terminal as we go.
+
+1. Create (Switch) Database
+Command: use <database_name>
+
+In SQL, you must run CREATE DATABASE. In MongoDB, you just tell the shell "I want to use the college database." If it doesn't exist, MongoDB waits until you save data to actually create it.
+
+Type this:
+
+JavaScript
+
+use college
+Output: switched to db college
+
+Your prompt should now change to college>.
+
+2. Create Collection & Create Documents (Insert)
+Command: db.<collection_name>.insertOne(<document>)
+
+We will create a collection named students and add your first document to it.
+
+Type this:
+
+JavaScript
+
+db.students.insertOne({ name: "Ashutosh", age: 21, course: "CSE" })
+Output: You will see a JSON object like:
+
+JSON
+
+{
+  "acknowledged": true,
+  "insertedId": ObjectId("656...")
+}
+acknowledged: true means it worked.
+
+insertedId: This is the unique _id MongoDB automatically generated for you.
+
+3. Read Data (Find)
+Command: db.<collection_name>.find()
+
+Now, let's see what is inside our collection.
+
+Type this:
+
+JavaScript
+
+db.students.find()
+Output:
+
+JSON
+
+[
+  {
+    "_id": ObjectId("..."),
+    "name": "Ashutosh",
+    "age": 21,
+    "course": "CSE"
+  }
+]
+This lists all documents in the collection.
+
+4. Data Manipulation - Update
+Command: db.<collection_name>.updateOne(<filter>, <update_action>)
+
+Let's say Ashutosh had a birthday and turned 22. We need to update the document where name is "Ashutosh". We use the $set operator to tell MongoDB exactly which field to change.
+
+Type this:
+
+JavaScript
+
+db.students.updateOne(
+  { name: "Ashutosh" },
+  { $set: { age: 22 } }
+)
+Output:
+
+JSON
+
+{
+  "acknowledged": true,
+  "insertedId": null,
+  "matchedCount": 1,
+  "modifiedCount": 1,
+  "upsertedCount": 0
+}
+matchedCount: 1: It found 1 student named Ashutosh.
+
+modifiedCount: 1: It successfully updated 1 document.
+
+Verify it: Type db.students.find() again. You will see "age" is now 22.
+
+Perfect. You are currently at the test> prompt in your terminal. We are going to execute the commands listed in your syllabus one by one.
+
+Topic 4: MongoDB Shell Commands
+
+In MongoDB, you don't need to "officially" create things before you use them. They are created automatically when you first save data.
+
+Type these commands into your terminal as we go.
+
+1. Create (Switch) Database
+Command: use <database_name>
+
+In SQL, you must run CREATE DATABASE. In MongoDB, you just tell the shell "I want to use the college database." If it doesn't exist, MongoDB waits until you save data to actually create it.
+
+Type this:
+
+JavaScript
+
+use college
+Output: switched to db college
+
+Your prompt should now change to college>.
+
+2. Create Collection & Create Documents (Insert)
+Command: db.<collection_name>.insertOne(<document>)
+
+We will create a collection named students and add your first document to it.
+
+Type this:
+
+JavaScript
+
+db.students.insertOne({ name: "Ashutosh", age: 21, course: "CSE" })
+Output: You will see a JSON object like:
+
+JSON
+
+{
+  "acknowledged": true,
+  "insertedId": ObjectId("656...")
+}
+acknowledged: true means it worked.
+
+insertedId: This is the unique _id MongoDB automatically generated for you.
+
+3. Read Data (Find)
+Command: db.<collection_name>.find()
+
+Now, let's see what is inside our collection.
+
+Type this:
+
+JavaScript
+
+db.students.find()
+Output:
+
+JSON
+
+[
+  {
+    "_id": ObjectId("..."),
+    "name": "Ashutosh",
+    "age": 21,
+    "course": "CSE"
+  }
+]
+This lists all documents in the collection.
+
+4. Data Manipulation - Update
+Command: db.<collection_name>.updateOne(<filter>, <update_action>)
+
+Let's say Ashutosh had a birthday and turned 22. We need to update the document where name is "Ashutosh". We use the $set operator to tell MongoDB exactly which field to change.
+
+Type this:
+
+JavaScript
+
+db.students.updateOne(
+  { name: "Ashutosh" },
+  { $set: { age: 22 } }
+)
+Output:
+
+JSON
+
+{
+  "acknowledged": true,
+  "insertedId": null,
+  "matchedCount": 1,
+  "modifiedCount": 1,
+  "upsertedCount": 0
+}
+matchedCount: 1: It found 1 student named Ashutosh.
+
+modifiedCount: 1: It successfully updated 1 document.
+
+Verify it: Type db.students.find() again. You will see "age" is now 22.
+
+5. Data Manipulation - Delete
+Command: db.<collection_name>.deleteOne(<filter>)
+
+db.students.deleteOne({ name: "Sunny" }) => the document in which name is sunny will be deleted
+{ "acknowledged": true, "deletedCount": 1 } => output
+
+6. Drop Collection & Drop Database
+A. Drop Collection This removes the "students" tab completely. Type this:
+db.students.drop() => output => true
+
+
+B. Drop Database This removes the "college" database completely. Type this:
+db.dropDatabase() => output => { "ok": 1, "dropped": "college" }
+
+
 
 
