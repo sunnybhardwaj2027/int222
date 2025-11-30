@@ -392,6 +392,33 @@ db.students.drop() => output => true
 B. Drop Database This removes the "college" database completely. Type this:
 db.dropDatabase() => output => { "ok": 1, "dropped": "college" }
 
+LET'S GO DEEPER INTO EACH OF THE FOUR MAIN OPERATIONS: INSERT, READ(FIND), UPDATE AND DELETE 
 
+1. deep dive: insert(creation) => you allready know 'insertOne'. but in real backend, you often need to create 100 users at once, or you need to understand exactly what creates a document
+
+A. Bulk insertion (insertMany) => if you have an array of data (like a list of students from a CSV file), using 'insertOne' inside a loop is slow. 'insertMany' is optimized to send them all in one network packet.
+
+Try this Command
+
+db.students.insertMany([
+  { name: "Rahul", age: 22, marks: 90, city: "Mumbai" },
+  { name: "Priya", age: 20, marks: 85, city: "Delhi" },
+  { name: "Amit", age: 23, marks: 70, city: "Delhi" },
+  { name: "Neha", age: 21, marks: 95, city: "Pune" }
+])
+
+Output => 
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('692aa6951a2da23da963b112'),
+    '1': ObjectId('692aa6951a2da23da963b113'),
+    '2': ObjectId('692aa6951a2da23da963b114'),
+    '3': ObjectId('692aa6951a2da23da963b115')
+  }
+}
+
+B. The _id Field (what is it really)
 
 

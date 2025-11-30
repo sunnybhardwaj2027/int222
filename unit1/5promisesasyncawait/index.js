@@ -10,7 +10,7 @@
 
 // 2. promise : you order food cashier give you a receipt with order number this receipt is promise . it's an object you hold on to => 1. you are not gonna be interupted you can check receipt(promise) whenever you want. 2. the receipt status starts as 'pending'(you are waiting for your food), 2. when your order is ready status changes to 'Fullfilled' (you got your food), 3. if they are out of burgers status changes to 'rejected' (mean an error occured)
 
-// how we use promise => a function that returns a promis allow us to chain action using .then() and .catch()
+// how we use promise => a function that returns a promise allow us to chain action using .then() and .catch()
 
 // 1 .then((result) => {...}) => this runs if promise is fullfilled. the 'result' is the data(your food).
 
@@ -63,7 +63,7 @@ fs.readFile(userFilePath, 'utf8')
     .then((fileData) => {
         // --- step1: file is read ---
         console.log('read user.json successfully ---');
-        // 'fileData' is a strin parse it into an object
+        // 'fileData' is a string parse it into an object
         const userObject = JSON.parse(fileData);
 
         // let's modify the object

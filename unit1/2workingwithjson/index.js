@@ -53,11 +53,11 @@ fs.writeFile(userFilePath, dataToWrite, (err) => {
     console.log('\nReading user.json back...');
     fs.readFile(userFilePath, 'utf8', (err, dataFromFile) => {
         if(err){
-            console.log('ERROR readind file : ', err);
+            console.log('ERROR reading file : ', err);
             return;
         }
 
-        console.log('row data from file (string) : \n', dataFromFile);
+        console.log('raw data from file (string) : \n', dataFromFile);
 
         // 3. parse the string back into an object
 

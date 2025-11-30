@@ -10,7 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const zlib = require('zlib'); // 1. impor the core module
+const zlib = require('zlib'); // 1. import the core module
 
 // define file paths
 const sourcePath = path.join(__dirname, 'user.json');

@@ -1,8 +1,8 @@
-// index.js file is getting crowded with routes like /, /about, /login etc..., imagine a real website with more the 50 routes --- you main file would become 1000-line mess
+// index.js file is getting crowded with routes like /, /about, /login etc..., imagine a real website with more the 50 routes --- your main file would become 1000-line mess
 
 // express.router => it's the way to solve it..
 
-// 1. express.Router => an express.Router is like 'mini-app' or sub-folder for your routes. it lets you group related routes togethere in their own files. keeping you main index.js file clean and organized
+// 1. express.Router => an express.Router is like 'mini-app' or sub-folder for your routes. it lets you group related routes together in their own files. keeping you main index.js file clean and organized
 
 /*
 

@@ -23,7 +23,7 @@ console.log('5 - 3 = ', subtract);
 const mult = myMath.multiply(5, 3);
 console.log('5 * 3 = ', mult);
 
-= > this will give an error because math.js didn't exported multiply function so it's unknow for this file
+= > this will give an error because math.js didn't exported multiply function so it's unknown for this file
 
 */
 

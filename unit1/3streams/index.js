@@ -2,7 +2,7 @@
 
 // we have used fs.readFile() upto this point but this has a hidden problem => It reads the entire file into your computer's RAM (memory) before it calls your callback function, If the file is small (like our user.json), this is fine, If the file is huge (like a 5GB video file or a 10GB log file), your program will use 5GB or 10GB of RAM. It will likely crash your server.
 
-// stream is a way to handle data in small managreable 'chunk'.
+// stream is a way to handle data in small manageable 'chunk'.
 
 const fs = require('fs');
 const path = require('path');
