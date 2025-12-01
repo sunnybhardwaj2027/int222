@@ -1,0 +1,15 @@
+{
+  "name": "my-first-app",
+  "version": "1.0.0",
+  "description": "\"here will connect database to node.js we will made them talk\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "mongo-driver.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongodb": "^7.0.0"
+  }
+}

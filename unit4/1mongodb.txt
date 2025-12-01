@@ -394,7 +394,7 @@ db.dropDatabase() => output => { "ok": 1, "dropped": "college" }
 
 LET'S GO DEEPER INTO EACH OF THE FOUR MAIN OPERATIONS: INSERT, READ(FIND), UPDATE AND DELETE 
 
-1. deep dive: insert(creation) => you allready know 'insertOne'. but in real backend, you often need to create 100 users at once, or you need to understand exactly what creates a document
+---- 1. deep dive: insert(creation) => you allready know 'insertOne'. but in real backend, you often need to create 100 users at once, or you need to understand exactly what creates a document
 
 A. Bulk insertion (insertMany) => if you have an array of data (like a list of students from a CSV file), using 'insertOne' inside a loop is slow. 'insertMany' is optimized to send them all in one network packet.
 
@@ -419,6 +419,135 @@ Output =>
   }
 }
 
-B. The _id Field (what is it really)
+B. The _id Field (what is it really) => when you insert a document. if you don't provide and '_id', MongoDB generates an 'ObjectId'. it is not random. it is 12-byte hexadecimal value containing.
 
+1. Timestamp(4 bytes) => when it was created.(you can actually Extract the creation date from the ID!).
+2. Machine ID(5 bytes) => unique to the server running the database.
+3. counter(3 bytes) => A running number to insure uniqueness.
 
+--- 2. Deep Dive: Find(Reading and filtering) ---
+
+db.collection.find() => by itself returns everything. real powers comes from Query operators.
+These are the specil keywords that start with $ used to filter data.
+
+A. Comparision operator => instead of finding exacty matches (age:20), you can find ranges.
+
+. $gt (Greater than) / $gte(Greater than or Equal): "find students with marks greater than 80."
+
+db.students.find({ marks: { $gt: 80 } })
+
+. $lt (Less Than) / $lte (Less Than or Equal): "Find students younger than 22."
+
+db.students.find({ marks: { $lt: 22 } })
+
+. $in (In Array): "Find students who live in EITHER Delhi OR Mumbai."
+
+db.students.find({ city : {$in : ["Delhi", "Mumbai"]}})
+
+B. LOGICAL OPERATORS => you can combine multiple conditions.
+
+. $and : (implicit in MongoDB, but can be explicit). "let's find students age more than or equal to 22 AND city has to be "Mumbai" or "Delhi"
+
+db.students.find({ city : {$in : ["Delhi", "Mumbai"]}, age : {$gte : 22}});
+
+. $or : "Find students who makrs greter that 85 or lives in delhi"
+
+db.students.find(
+  {
+    $or : [
+      { marks : { $gt : 85}}, 
+      { city : "Delhi"}
+    ]
+  }
+)
+
+C. PROJECTION (SELECTING FIELDS)
+=> in a real app, your user document might have 50 fields(password, history, hobbies, logs). but your frontend only needs their 'name' and 'city'. sending the whole document wastes bandwith. 
+we use 'Projection'(The second Argument in 'find') to include (1) or exclude (0) fields.
+
+// return ONLY 'name' and 'city' hide the _id
+db.students.find({}, { name : 1, city : 1, _id: 0});
+
+[
+  { name: 'Rahul', city: 'Mumbai' },
+  { name: 'Priya', city: 'Delhi' },
+  { name: 'Amit', city: 'Delhi' },
+  { name: 'Neha', city: 'Pune' },
+  { name: 'Sunny', city: 'jalandhar' }
+]
+
+db.students.find({}, {city : 1, marks : 1}); => id will also come if we want to hide id then we have to inclue '_id : 0'
+
+[
+  {
+    _id: ObjectId('692dd17ba70068bc4863b112'),
+    marks: 90,
+    city: 'Mumbai'
+  },
+  {
+    _id: ObjectId('692dd17ba70068bc4863b113'),
+    marks: 85,
+    city: 'Delhi'
+  },
+  {
+    _id: ObjectId('692dd17ba70068bc4863b114'),
+    marks: 70,
+    city: 'Delhi'
+  },
+  {
+    _id: ObjectId('692dd17ba70068bc4863b115'),
+    marks: 95,
+    city: 'Pune'
+  },
+  {
+    _id: ObjectId('692dd48ba70068bc4863b116'),
+    marks: 80,
+    city: 'jalandhar'
+  }
+]
+
+3. Deep Dive : UPDATE(MODIFICATION)
+=> 'updateOne' requires two parts: the Filter (who to change) and the Update Operator(how to change it) if you don't use an operator, you might accidentally replace the entire document.
+
+A. specific Field Operators 
+. $set => Updates seperate fields, leaves others alone.
+
+// Change Amit's city to 'Bangalore'
+db.students.updateOne({ name: "Amit" }, { $set: { city: "Bangalore" } })
+
+. $inc(increment): Useful for counters like "views", "likes", or "age". you don't need to read the current value first; the database does the math.
+
+// Add 2 bonus marks to Rahul 
+db.students.updateOne({ name : "Rahul" }, { $inc: {marks: 2}});
+
+. $rename => renames a field(column) itself.
+db.students.updateMany({}, { $rename: {"marks": "score"}});
+
+. $unset => deletes a field from a document completely
+// Remove the 'age' field from Neha
+db.students.updateOne({name : "Neha"}, {$unset : {age : ""}});
+
+B. upsert (Update or insert) => this is a very common requirement. "Update this user if they exist, create them." instead of writing an 'if/else' in your code, you can use the 'upsert : true' option
+
+db.students.updateOne(
+    { name: "Vikram" },         // Look for Vikram
+    { $set: { marks: 88 } },    // Set marks to 88
+    { upsert: true }            // Option: If not found, CREATE him.
+)
+
+=> Since "Vikram" didn't exist before, MongoDB creates a new document for him.
+
+db.students.updateOne(
+  {name : "Sunny"}, 
+  {$set : {score: 99}},
+  {upsert: true}
+)
+
+=> since "Sunny" exist before. MongoDB will update marks of "sunny"
+
+4. Deep dive: Delete => be careful here
+. deleteOne(filter) => deletes the first document that matches
+. deleteOne(filter) => deletes every documents that matches
+
+example: "delete all the students who scored less than 85"
+db.students.deleteMany({ score : {$lt : 85}});
