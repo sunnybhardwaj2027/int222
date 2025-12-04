@@ -1,0 +1,15 @@
+{
+  "name": "3mongoose",
+  "version": "1.0.0",
+  "description": "\"here we will study about mongoose\"",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "mongoose-basics.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongoose": "^9.0.0"
+  }
+}
