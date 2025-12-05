@@ -1,0 +1,15 @@
+{
+  "name": "part2",
+  "version": "1.0.0",
+  "description": "\"here we will learn advanced mongoose\"",
+  "license": "ISC",
+  "author": "sunny kumar",
+  "type": "commonjs",
+  "main": "test-pro-model.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongoose": "^9.0.0"
+  }
+}
