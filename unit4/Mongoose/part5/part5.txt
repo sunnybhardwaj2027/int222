@@ -1,0 +1,107 @@
+PART4 => The REST API (Express.js)
+
+You have the database logic (Mongoose). Now you need the Server to accept request from the outside world (frontend, Mobile App, Postman)
+
+Express.js is traffic controller. it receives a request(eg: "Create a User"), figure out what to do, talks to mongoose, and sends a response back
+
+1. The setup => we need to install Express. in your terminal => npm install Express
+
+2. The "Hello World" of APIs
+
+=> create a file called 'server.js' this will be our main entry point.
+
+Key Concept: express.json() By default, Express doesn't know how to read JSON data sent in request body. it sees it as a confused stream of text. you must use the 'express.json()' middleware to tell Express: "Hey, if data comes in as JSON, parse it into javascript for me".
+
+code: server.js
+
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = 3000;
+
+// --- MIDDLEWARE ---
+// crucial: Allows us to read JSON data sent in req.body
+app.use(express.json());
+
+// --- DATABASE CONNECTION ---
+mongoose.connect('mongodb://localhost:27017/myFirstApiDB')
+    .then(() => console.log("Database Connected"))
+    .catch(err => console.log("DB error:", err))
+
+// --- MODEL (Quick definition for this file) ---
+const User = mongoose.model('User', new mongoose.Schema({
+    username: { type: String, required: true},
+    email: {type: String, required: true, unique: true}
+}));
+
+// --- Routes ---
+
+// 1. GET request (Read)
+// Visit http://localhost:3000/ in your browser
+app.get('/', (req, res) => {
+    res.send("Welcome to your first API");
+});
+
+// 2. POST request (Create)
+// Browser cannot do easily. You need postman/thunder Client.
+
+app.post('/api/users', async(req, res) => {
+    try {
+        console.log("Data received: ", req.body); // check your console!
+        
+        // create user in MongoDB
+        const newUser = await User.create(req.body);
+
+        // send back the success response (201 == created)
+        res.status(201).json({
+            message: "User created successfully",
+            user: newUser
+        });
+    } catch(error) {
+        // Send back error response (500 = Server Error)
+        res.status(500).json({
+            message: "Error creating User",
+            error: error.message
+        });
+    }
+});
+
+// --- START SERVER ---
+app.listen(PORT, () => {
+    console.log(`server running on http://localhost:3000`);
+})
+
+--- code ended ---
+
+3. How to test(Without a frontend)
+=> since you don't have a React frontend build yet, you cann't test the 'POST' route in your browser (browser default to GET).
+
+You need a tool like Postman or the Thunder Client extention in VS code.
+
+1. Method: Select POST
+2. URL: http://localhost:3000/api/users
+3. Body: Select JSON
+4. paste this code:
+
+{
+    "username": "BackendNinja",
+    "email": "ninja@code.com"
+}
+
+5. Send: You should see the response from your server
+
+--- output ---
+server running on http://localhost:3000
+Database Connected
+Data received:  { username: 'BackendNinja', email: 'ninja@code.com' }
+--- output ended ---
+
+Why this makes you a good developer
+1. status Code: You used 201 for created and 500 for errors. Rookies just send 200 (OK) for everything. HTTP status code tells the frontend exactly what happened.
+
+2. Error handling: YOu wrapped the database logic in 'try/catch' block. if the database fails (eg: duplicate email), your server won't crash, it will politely tell the user what went wrong.
+
+3. seperation: You are using '/api/' prefix for your data routes. This distinguishes them from routes that might serve HTML pages.
+
+

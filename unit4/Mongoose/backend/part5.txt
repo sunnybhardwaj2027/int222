@@ -1,0 +1,20 @@
+React runs in the Browser(Client Side). Express runs on the Server(Server side). they are usually on different "origins" (eg: React on localhost:5173 and express on localhost:3000)
+
+To connect them, we need to bridge a security gap called CORS and then use 'fetch' to send data.
+
+here is part 5.5 => connecting React to express
+
+1. the Backend adjustment (CORS)
+
+=> Browsers have a security feature that blocks a website on port 5173(React) from asking for data from port 3000(Express). This is to prevent malicious sites from reading your internal servers.
+
+To allow your React app to talk to your backend, you must explicitly allow it in express using 'cors' middleware.
+
+in your backend terminal => npm install cors
+
+update server.js
+const cors = require(cors); <---1. import cors
+
+app.use(cors()); <--- 2. Enable it! Now react can talk to us
+
+
