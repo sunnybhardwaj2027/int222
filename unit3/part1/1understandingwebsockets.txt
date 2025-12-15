@@ -2,10 +2,10 @@ Socket services in Node.js
 
 * understanding network sockets * 
 
-1. the problem in with unit2(HTTP) => in unit2, we used HTTP(app.get, app.post). HTTP is designed to be stateless and unidirectional(one-way)
+1. the problem with unit2(HTTP) => in unit2, we used HTTP(app.get, app.post). HTTP is designed to be stateless and unidirectional(one-way)
 
 the 'request-response' cycle
-1. client => 'hey, sever give me the login.'(request)
+1. client => 'hey, server give me the login.'(request)
 2. server => 'here is the login page' (response)
 3. connection => cut
 

@@ -6,7 +6,7 @@ we have actually been using middleware this entire time(express.json(), express.
 
 middleware is a function that sits in the middle of the request-response cycle. it has access to the request object(req), the response object(res), and a special function usually called next.
 
-The analogy: The Factory Assembly Line imaging your web server is a factory making a product.
+The analogy: The Factory Assembly Line imagine your web server is a factory making a product.
 1. Raw Material(Request): the request comes in at the start of the line.
 2. The stations(middleware): the raw Material passes through serveral stations.
 . station A(Logger): "I will write down the time this material arrived." --> passes it on.
@@ -67,6 +67,7 @@ app.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 
+--- code ended here ---
 
 Run this code:
 

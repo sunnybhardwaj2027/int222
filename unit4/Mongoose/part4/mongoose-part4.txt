@@ -1,0 +1,163 @@
+PART4 => MIDDLEWARE(HOOKS)
+
+in mongoose, Middleware are functions that run at specific stages of a request pipeling. we call them hooks.
+
+There are two main Types:
+1. pre-hooks: Run before an event(eg: before saving to DB)
+2. Post-hooks: Run after an event(eg: after saving to DB)
+
+we will cover the two most critical use cases for a backend developer: password hashing and Cascading deletes
+
+The Golden Rule of hooks:
+
+WARNING: do not use arrow functions ( () => {} ) for mongoose hooks. Arrow function handle 'this' keyword differently. inside a hook, we need 'this' to refer to the specific document being saved or deleted. Always use function() {}
+
+UseCase 1: Automatic password Hashing( pre('save') )
+=> you never store password in plain text. Instead of hashing the password manually in every controller, we tell the Model: "Before you save yourself, encry the password"
+we usually use a library called 'bcrypt' for this, but to keep this tutorial dependency-free, we will simulate it.
+
+userSchema.pre('save', async function (next) {
+    // 'this' refers to the User document about to be saved
+    const user = this;
+
+    // OPTIMIZATION: Only hash the password if it has been modified (or is new)
+    // if user updates their email, we don't want to re-hash the already hashed password!
+    if(!user.isModified('password')) return next();
+
+    // simulate hashing (in real life: await bcrypt.hash(user.password, 10));
+    user.password = `SECRET_HASH_${user.password}_ENCRYPTED`.
+
+    // proceed to save
+    next();
+});
+
+Use case 2: Cascading Deletes (pre('deleteOne'))
+=> if you delete a user, what happens to their posts?
+1. Orphened data => The posts stay in the DB forever, linked to a user that doesn't exist. (Bad)
+2. Cascading Delete => When a User is deleted, automatically find and delete their posts. (good)
+
+userSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+    const userId = this._id;
+    console.log(`Middleware: Cleaning up posts for use ${userId}...`);
+
+    // Delete all posts where author == userId
+    await mongoose.model('post').deleteMany({ author: userId });
+
+    next();
+});
+
+Full working example
+create a file called 'hooks.js'. This script demonstrates the full lifecycle: Hashing on creation, and cleaning up on deletion
+
+code: hooks.js
+
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/hooksDB')
+    .then(() => console.log("Connected"))
+    .catch(err => console.log(err));
+
+/* ---------------- SCHEMAS ---------------- */
+
+// POST Schema
+const postSchema = new mongoose.Schema({
+    title: String,
+    author: mongoose.Schema.Types.ObjectId
+});
+const Post = mongoose.model('Post', postSchema);
+
+// USER Schema
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String
+});
+
+/* ---------------- MIDDLEWARE ---------------- */
+
+// A. Pre-save: Hash Password
+userSchema.pre('save', async function () {
+    console.log("\n[MW] Pre-save hook triggered. Hashing Password...");
+    this.password = `###${this.password}###`;
+});
+
+// B. Pre-delete: Cascade Delete Posts
+userSchema.pre(
+    'deleteOne',
+    { document: true, query: false },
+    async function () {
+        console.log(`\n[MW] Pre-delete hook triggered. Removing posts for user ${this._id}`);
+        await Post.deleteMany({ author: this._id }); // ✅ FIXED
+    }
+);
+
+const User = mongoose.model('User', userSchema);
+
+/* ---------------- RUN LOGIC ---------------- */
+
+async function run() {
+    try {
+        console.log("--- Creating User ---");
+        const newUser = new User({
+            username: "SecurityExpert",
+            password: "mySuperSecretPassword123"
+        });
+
+        await newUser.save();
+        console.log("User Saved. DB Password is:", newUser.password);
+
+        console.log("\n--- Creating Posts ---");
+        await Post.create([
+            { title: "Security 101", author: newUser._id },
+            { title: "Hashing Secrets", author: newUser._id }
+        ]);
+        console.log("Created 2 posts for this User.");
+
+        console.log("\n--- Deleting User ---");
+        await newUser.deleteOne();
+
+        const remainingPosts = await Post.find({ author: newUser._id });
+        console.log(`\nRemaining posts for this user: ${remainingPosts.length}`);
+        // should be 0
+
+    } catch (e) {
+        console.error(e);
+    } finally {
+        mongoose.connection.close();
+    }
+}
+
+run();
+
+output:
+
+--- Creating User ---
+
+[MW] Pre-save hook triggered. Hashing Password...    
+Connected
+User Saved. DB Password is: ###mySuperSecretPassword123###
+
+--- Creating Posts ---
+Created 2 posts for this User.
+
+--- Deleting User ---
+
+[MW] Pre-delete hook triggered. Removing posts for user 693f8979fa341ec73e5a744f
+
+Remaining posts for this user: 0
+
+--- output ended ---
+
+Why this makes you good developer
+1. Security by Design: you don't rely on remembering to hash passwords in your controllers. The Model enforces it
+2. Databse Hygiene: You ensure that your database doesn't fill up with "dead" data(posts belonging to deleted users)
+3. DRY(don't repeat yourself): Logic is centralized in the Schema, not scattered across 10 different API routes
+
+What's next?
+you have now mastered the Database Layer
+1. Models & Validation(structure)
+2. Relationships(Conneting Data)
+3. Middleware(Logic Triggers)
+
+The next step is server layer. we need to install Express.js so we can actually receive requests (GET/POSTS) from a frontend or Postman and use these database Models.
+
+Ready to build your first REST API with Express ?

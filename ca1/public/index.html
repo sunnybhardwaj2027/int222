@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Live Dot</title>
+  <style>
+    body { margin:0; overflow:hidden; background:#111; }
+    .dot {
+      position:fixed;
+      width:12px; height:12px;
+      border-radius:50%;
+      background:#0af;
+      transform:translate(-50%,-50%);
+    }
+  </style>
+</head>
+<body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const others = {};
+
+    window.onmousemove = (e) => {
+      socket.emit('move', { x: e.clientX, y: e.clientY });
+      selfDot.style.left = e.clientX + 'px';
+      selfDot.style.top = e.clientY + 'px';
+    };
+
+    const selfDot = document.createElement('div');
+    selfDot.className = 'dot';
+    selfDot.style.background = '#f22';
+    document.body.appendChild(selfDot);
+
+    socket.on('move', (d) => {
+      if (!others[d.id]) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        document.body.appendChild(dot);
+        others[d.id] = dot;
+      }
+      others[d.id].style.left = d.x + 'px';
+      others[d.id].style.top = d.y + 'px';
+    });
+
+    socket.on('remove', (id) => {
+      if (others[id]) {
+        others[id].remove();
+        delete others[id];
+      }
+    });
+  </script>
+</body>
+</html>
