@@ -1,0 +1,18 @@
+Now that you backend is organized into the MVC structure, adding new feature is much cleaner.
+
+PART 6: COMPLETING CRUD(Update & Delete).
+
+=> in c++, when you want to modify a specific object in a vector or array, you usually need it's index or a pointer. In a database, we use the 'Unique Id' (_id) that mongoDB automatically assigns to every document.
+
+here is how we implement the U(update) and D(delete) of CRUD.
+
+1. The Backend Logic (Controller)
+    . Open controller/userController.js we need to add logic to find a user by their ID and modify or remove them.
+
+Mongoose provides two perfect methods for this:
+    . findByIdAndUpdate(id, newData, options)
+    . findByIdAndDelete(id)
+
+Add these functions to your file:
+
+
