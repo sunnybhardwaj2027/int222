@@ -20,20 +20,20 @@ THIS PART COVERS:
         . The fix: We need to implement pagination (?page=1&limit=10), sorting (?sort=-price), and Filtering(?category=village-products)
         
 4. File uploads (Multer)
-    . apps needs products image. you can't store image MongoDB directly (it's too slow).
+    . apps needs products image. you can't store image in MongoDB directly (it's too slow).
         . The Solution: We use a library called 'multer' to accept image uploads and store them in the cloud (like cloudinary or AWS 33)
 
 5. Global Error Handling
-    . Right now, you wirte 'try/catch' in every single controller function. That is repetive code (DRY violation).
+    . Right now, you write 'try/catch' in every single controller function. That is repetive code (DRY violation).
         . The Fix : We create a centralized Error Handler that catches errors from anywhere in the app and formats them nicely.
 
 ----------------------- MIDDLEWARE & VALIDATION (THE BOUNCER) ----------------------
 
-Rigth now, you API is like a club with no bouncer. Anyone can walk in with fake IDs(bad data) and cause trouble.
+Right now, you API is like a club with no bouncer. Anyone can walk in with fake IDs(bad data) and cause trouble.
 
 if a frontend dev sends this JSON:
     {
-      "username": "",
+        "username": "",
         "email": "not-an-email"
     }
 => your current code tries to save it. MongoDB might throw an error, but we want to catch this before it even touches our database logic.
@@ -65,7 +65,7 @@ const validateCreateUser = [
     // Check email: Must be a valid email format
     body('email')
         .isEmail().withMessage('Must be a valid email address')
-        .normalizeEmail(), // Sanitize email (conver to lowecase)
+        .normalizeEmail(), // Sanitize email (convert to lowecase)
 
     // Check password (if you had one):
     // body('password').isLength({ min: 6 }).withMessage('Password too Short')
@@ -74,7 +74,7 @@ const validateCreateUser = [
 
 // 2. middleware function that checks the results.
 const handleValidationErrors = (req, res, next) => {
-    // check if the rules above found any erros
+    // check if the rules above found any errors
     const errors = validationResult(req);
 
     // if there ARE erros, stop the requrest here. Don't call next().

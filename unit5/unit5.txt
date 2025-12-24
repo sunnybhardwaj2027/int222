@@ -1,0 +1,20 @@
+1. INTRODUCTION TO PostgreSQL 
+
+=> What is it? PostgreSQL (Often called "Postgres") is a powerful, open-source Object-Relational database management system. Unlike simple relational databases, Postgres allows you to Store Complex data types and even create your own.
+
+why is it popular for Node.js backends?
+
+    . ACID Complience: it guarantees the validity of transactions (Atomicity, Consistency, Isolation, Durability), ensuring your data is safe even if the server crashes.
+
+    . Extensibility: You can define your own date types, index types and functional languages.
+
+    . JSON support: it has excellent support for JSON data, making it a perfect bridge betweeen SQL (relational) and NoSQL (document-based) paradigms, which is great for Javascript/Node.js developers.
+
+    . Concurrency: it handles high traffic loead very well using a system called MVCC (Multiversion Concurrency control), meaning readers don't block writers and vice versa.
+
+A. Create a database
+    CREATE DATABASE node_app_db;
+
+    => after running this, you usually need to switch into this database to work on it (comman: /cnode_app_db  in psql).
+
+    
